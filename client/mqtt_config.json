@@ -1,0 +1,11 @@
+{
+    "CLIENT_ID": "my_device_id",
+    "BROKER_SERVER": "mqtt.broker.url",
+    "BROKER_PORT": 8883,
+    "BROKER_USERNAME": "username",
+    "BROKER_PASSWORD": "password",
+    "SUB_TOPIC": "test/",
+    "PUB_TOPIC": "test/",
+    "WIFI_SSID": "my_wifi",
+    "WIFI_PASSWORD": "password"
+}

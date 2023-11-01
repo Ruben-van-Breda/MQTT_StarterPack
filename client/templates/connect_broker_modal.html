@@ -1,0 +1,111 @@
+
+
+<!-- Connect Broker Modal Modal -->
+<div
+class="modal fade"
+id="connectModal"
+tabindex="-1"
+role="dialog"
+aria-labelledby="connectModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="connectModalLabel">
+        MQTT Configuration
+      </h5>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- Your broker fields here -->
+      <!-- e.g. <input type="text" placeholder="Broker" /> -->
+      <form id="broker-form" action="/connect" method="post">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="broker">Broker</label>
+              <input
+                id="broker"
+                class="form-control"
+                type="text"
+                name="broker"
+                value=""
+                required
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="port">Port</label>
+              <input
+                id="port"
+                class="form-control"
+                type="number"
+                name="port"
+                value="8883"
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input
+                id="username"
+                class="form-control"
+                type="text"
+                name="username"
+                value=""
+                required
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                id="password"
+                class="form-control"
+                type="text"
+                name="password"
+                value=""
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-right">
+            <button class="btn btn-outline-success" type="submit">
+              Connect
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-dismiss="modal"
+      >
+        Close
+      </button>
+      <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+    </div>
+  </div>
+</div>
+
+
+
+</div>

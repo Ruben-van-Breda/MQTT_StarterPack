@@ -1,0 +1,110 @@
+<!--  Sidebar -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<div id="sidebar" style="padding: 20px">
+    <!-- button to toggle hiding the sidebar div -->
+    <button
+    class="navbar-toggler"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#sidebar"
+    aria-controls="sidebar"
+    aria-expanded="false"
+    onclick="toggleSideBar"
+    aria-label="Toggle navigation"
+    style="color: wheat;">X</button>
+   <br>
+    <script>
+       function toggleSideBar() {
+         var sidebar = document.getElementById("sidebar");
+         if (sidebar.style.display === "none") {
+           sidebar.style.display = "block";
+         } else {
+           sidebar.style.display = "none";
+         }
+       }
+    </script>
+  <h2
+    style="
+      color: white;
+      align-content: center;
+      justify-content: center;
+      margin: 10px;
+    "
+  >
+    MQTT Configuration
+  </h2>
+
+ 
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-toggle="modal"
+    data-target="#connectModal"
+  >
+    Connect
+  </button>
+  <br />
+  <br />
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-toggle="modal"
+    data-target="#addModal"
+  >
+    Add Function
+  </button>
+
+  <!-- space divider with line -->
+  <hr style="border-top: 1px solid white" />
+
+  <div class="connections_list">
+    <ul>
+    
+      <div class="defined-calls-list" id="defined-calls-list">
+        <!-- Defined list of calls  -->
+        <!-- Messages will be appended here by JavaScript -->
+
+      </div>
+    </ul>
+  </div>
+
+
+  <script>
+    function custom_publish() {
+      // Get the CSRF token from the cookie
+      // const csrfToken = document.cookie.match(/csrftoken=([\w-]+)/)[1];
+      // Define the data to send in the request
+      const data = {
+        topic: "all/test",
+
+        message: "buzzer:crazy_frog",
+      };
+
+      // Send the POST request using the requests library
+      fetch("/publish", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // 'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("There was a problem with the fetch operation:", error);
+        });
+    }
+  </script>
+</div>
+
+{% include 'connect_broker_modal.html' %} {% include
+'add_defined_pub_call_modal.html' %}

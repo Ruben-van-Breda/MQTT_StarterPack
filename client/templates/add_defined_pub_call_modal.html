@@ -1,0 +1,156 @@
+<!-- Connect Defined Pub Call  Modal -->
+<div
+  class="modal fade"
+  id="addModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Publish String</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Your broker fields here -->
+        <!-- e.g. <input type="text" placeholder="Broker" /> -->
+        <form id="add-form" action="/add_call" method="post">
+          <div class="row">
+            <div class="col-md-12 text-left">
+              <!-- text input -->
+              <div class="form-group">
+                <label for="add_def_name">name</label>
+                <input
+                  id="add_def_name"
+                  class="form-control"
+                  type="text"
+                  name="add_def_name"
+                  value="ping test"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row mb-12">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="topic">topic</label>
+                <input
+                  id="add_def_topic"
+                  class="form-control"
+                  type="text"
+                  name="add_def_topic"
+                  value="all/test"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="message">String</label>
+                <input
+                  id="add_def_message"
+                  class="form-control"
+                  type="text"
+                  name="add_def_message"
+                  value="test message 🔥"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 text-right">
+              <button class="btn btn-outline-success" type="submit">
+                Save
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // check document ready
+    $(document).ready(function () {
+      document
+        .getElementById("add-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault(); // Prevent the form from submitting the traditional way
+
+
+          var title = document.getElementById("add_def_name").value;
+          var topic = document.getElementById("add_def_topic").value;
+          var message = document.getElementById("add_def_message").value;
+
+          //   Update the connection details here
+
+          // Update the connection details here
+
+          // Close the modal after form submission
+          hideModal("addModal");
+          fetch("/add_call", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              topic: topic,
+              message: message,
+              name: title
+            }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(
+                  "Network response was not ok " + response.statusText
+                );
+              }
+
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Success:", data);
+              updateConnectionStatus(
+                '<span class="badge bg-success">Connected</span>'
+              );
+
+              //  set flask variable connection_status// Update the UI
+              connection_status = "Connected";
+            })
+            .catch((error) => {
+              alert("error:", error);
+              connection_status = "Not Connected";
+
+              updateConnectionStatus(
+                '<span class="badge bg-warning">Not Connected</span>'
+              ); // Update the UI
+            });
+        });
+
+      socket.on("update_defined_calls", function (status) {
+        // update ui
+      });
+    });
+
+    
+  </script>
+</div>
