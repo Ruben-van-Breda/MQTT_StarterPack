@@ -11,7 +11,7 @@ web_client_directory = os.path.abspath(os.path.join(current_directory, '..'))
 # Append to sys.path
 sys.path.append(web_client_directory)
 
-from common.MQTT_Standard import MQTTStandard
+from lib.MQTT_Standard import MQTTStandard
 
 def on_message(client, userdata, msg):
     print("\nMessage received: " + str(msg.payload.decode("utf-8")))

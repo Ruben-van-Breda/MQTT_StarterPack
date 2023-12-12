@@ -32,6 +32,9 @@ class MQTTStandard():
         # Register the default on_subscribe callback
         
     def load_config(self, config_file):
+        """
+            Load configuration from a JSON file.
+        """
         print("MQTTStandard loading configuration from file: " + config_file)
         try:
             with open(config_file, 'r') as f:
@@ -46,50 +49,50 @@ class MQTTStandard():
     
      # setting callbacks for different events to see if it works, print the message etc.
     
-    
     def on_connect_default(self, client, userdata, flags, rc, properties=None):
         print("CONNACK received with code %s." % rc)
 
-    # with this callback you can see if your publish was successful
     def on_publish_default(self, client, userdata, mid, properties=None):
         print("Defaul Publish Called: Broadcast received with code %s." % mid)
-        # pass
-
-        # self.client.publish("all/test", "{userdata.message}", qos=1)
-        
-        # print("mid: " + str(mid))
-        # print("userdata: " + str(userdata))
-
-    # # print which topic was subscribed to
-    # def on_subscribe_default(client, userdata, mid, granted_qos, properties=None):
-    #     print("Default on_subscribe callback")
-    #     print("Subscribe successful with message ID:", mid)
-    #     print("Granted QoS levels:", granted_qos)
-    
+      
     def on_subscribe_default(client, userdata, mid, granted_qos, properties=None):
         print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
-    # print message, useful for checking if it was successful
     def on_message_default(client, userdata, msg):
         print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
     
     def publish(self, topic, msg, qos=1):
+        """
+            Publish a message to a topic.
+        """
         print("Calling client.publish on topic " + topic + " data: " + str(msg)) 
         # bytes msg
         msg = msg.encode("utf-8")
         self.client.publish(topic, msg, qos=1)
 
-    def connect(self):
-        self.client = paho.Client(client_id="", userdata=None, protocol=paho.MQTTv5)
-        self.client.on_connect = self.on_connect if self.on_connect else self.on_connect_default
+    def connect(self) -> paho.Client:
+        """
+            Connect to the MQTT broker using the configuration.
+            Returns a client object
+        """
 
+        self.client = paho.Client(client_id="", userdata=None, protocol=paho.MQTTv5)
+
+        self.client.on_connect = self.on_connect if self.on_connect else self.on_connect_default
         self.client.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
+        # Set username and password 
         self.client.username_pw_set(self.config["BROKER_USERNAME"], self.config["BROKER_PASSWORD"])
 
-        print("Connecting to broker: " + self.config["BROKER_SERVER"])
-        print("Connecting port: " + str(self.config["BROKER_PORT"]))
-        connection_status = self.client.connect(self.config["BROKER_SERVER"], self.config["BROKER_PORT"])
+        # Establish connection to the broker
+        try:
+            print("Connecting to broker: " + self.config["BROKER_SERVER"])
+            print("Connecting port: " + str(self.config["BROKER_PORT"]))
+            connection_status = self.client.connect(self.config["BROKER_SERVER"], self.config["BROKER_PORT"])
+        except ConnectionRefusedError:
+            print("Connection refused")
+            raise ConnectionRefusedError("Connection refused")
         print("Connection status: %s" % connection_status)
+
 
         # self.client.on_subscribe = self.on_subscribe if self.on_subscribe else self.on_subscribe_default
         self.client.on_message = self.on_message if self.on_message else self.on_message_default
@@ -97,14 +100,13 @@ class MQTTStandard():
 
         self.client.on_subscribe = self.on_subscribe
 
-
-
+        # Subscribe to the topic specified in the configuration
         self.client.subscribe(self.config["SUB_TOPIC"], qos=1)
+        # Publish a message to a topic specified in the configuration to indicate that the client is connected
         self.client.publish("all/test", "MQTT Client: connected", qos=1)
 
-       
+        # Start the loop to listen for messages
         self.start()
-
 
         return self.client
 
